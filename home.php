@@ -303,8 +303,8 @@ require_once __DIR__ . "/lang.php";
 
         </div>
 
-        <a href="#" class="view-all">
-            عرض الكل ←
+        <a href="map.php" class="view-all">
+            عرض الكل على الخريطة ←
         </a>
 
     </div>
@@ -314,132 +314,58 @@ require_once __DIR__ . "/lang.php";
 
 
         <!-- المسجد النبوي -->
-
        <a href="places/details.php?id=1" class="place-card">
-
-    <div class="place-image mosque">
-
-        <span>
-             🏛
-        </span>
-
-    </div>
-
-    <div class="place-content">
-
-        <h3>
-         على خطاه
-        </h3>
-
-        <p>
-        
-مسار وجولات سياحية وإثرائية مخصصة لتتبع خطوات الرسول صلى الله عليه وسلم والأحداث النبوية العظيمة بالمدينة المنورة.
-
-        </p>
-
-        <small>
-            📍 المدينة المنورة
-        </small>
-
-    </div>
-
-</a>
-
-
-        <!-- جبل أحد -->
-
-        <a href="places/details.php?id=2" class="place-card">
-
-    <div class="place-image mountain">
-
-        <span>
-            🏛
-        </span>
-
-    </div>
-
-    <div class="place-content">
-
-        <h3>
-          الباص السياحي
-        </h3>
-
-        <p>
-           خدمة النقل السياحي عبر حافلات مكشوفة السقف لنقل الزوار بين أبرز المعالم التاريخية والثقافية.
-        </p>
-
-        <small>
-            📍 المدينة المنورة
-        </small>
-
-    </div>
-
-</a>
+            <div class="place-image mosque">
+                <span>🕌</span>
+            </div>
+            <div class="place-content">
+                <h3>المسجد النبوي</h3>
+                <p>أشرف بقاع الأرض وثاني الحرمين الشريفين ومثوى النبي صلى الله عليه وسلم.</p>
+                <small>📍 موقع مركزي في المدينة المنورة</small>
+            </div>
+        </a>
 
 
         <!-- مسجد قباء -->
-
         <a href="places/details.php?id=3" class="place-card">
-
-    <div class="place-image quba">
-
-        <span>
-            🕌
-        </span>
-
-    </div>
-
-    <div class="place-content">
-
-        <h3>
-            مسجد النبوي
-        </h3>
-
-        <p>
-            أشرف بقاع الأرض وأحد أبرز معالم المدينة.
-        </p>
-
-        <small>
-            📍 المدينة المنورة
-        </small>
-
-    </div>
-
-</a>
+            <div class="place-image quba">
+                <span>🕌</span>
+            </div>
+            <div class="place-content">
+                <h3>مسجد قباء</h3>
+                <p>أول مسجد أسس على التقوى في الإسلام، وفضل الصلاة فيه كعمرة.</p>
+                <small>📍 جنوب المدينة المنورة</small>
+            </div>
+        </a>
 
 
-        <!-- المتحف -->
+        <!-- جبل أحد -->
+        <a href="places/details.php?id=2" class="place-card">
+            <div class="place-image mountain">
+                <span>⛰️</span>
+            </div>
+            <div class="place-content">
+                <h3>جبل أحد</h3>
+                <p>الجبل الذي أحبه النبي صلى الله عليه وسلم ويشهد على تاريخ غزوة أحد العظيمة.</p>
+                <small>📍 شمال المدينة المنورة</small>
+            </div>
+        </a>
 
+
+        <!-- مقبرة البقيع -->
         <a href="places/details.php?id=4" class="place-card">
-
-    <div class="place-image museum">
-
-        <span>
-            🕌
-        </span>
-
-    </div>
-
-    <div class="place-content">
-
-        <h3>
-          مسجد قباء
-        </h3>
-
-        <p>
-           اول نسجد بني في السلام
-        </p>
-
-        <small>
-            📍 المدينة المنورة
-        </small>
+            <div class="place-image museum">
+                <span>🏛</span>
+            </div>
+            <div class="place-content">
+                <h3>مقبرة البقيع</h3>
+                <p>مضجع آل بيت النبي صلى الله عليه وسلم وجمع غفير من الصحابة الكرام.</p>
+                <small>📍 بجوار المسجد النبوي الشريف</small>
+            </div>
+        </a>
 
     </div>
-
-</a>
-
-    </div>
-    </section>
+</section>
 
 <!-- ================= PLANNER ================= -->
 
@@ -467,7 +393,7 @@ require_once __DIR__ . "/lang.php";
 
         <a href="visit_planner.php" >
               منظم الزيارة
-</a>
+        </a>
 
     </div>
 
@@ -496,40 +422,42 @@ require_once __DIR__ . "/lang.php";
 
     </div>
 
+    <!-- جعل الخريطة بأكملها رابطاً يوجه لصفحة map.php -->
+    <a href="map.php" style="text-decoration: none; display: block;">
+        <div class="map" style="cursor: pointer; position: relative; overflow: hidden;">
 
-    <div class="map">
-
-        <div class="road road-one"></div>
-        <div class="road road-two"></div>
-        <div class="road road-three"></div>
+            <div class="road road-one"></div>
+            <div class="road road-two"></div>
+            <div class="road road-three"></div>
 
 
-        <div class="pin pin-one">
-            📍
+            <div class="pin pin-one">
+                📍
+            </div>
+
+            <div class="pin pin-two">
+                📍
+            </div>
+
+            <div class="pin pin-three">
+                📍
+            </div>
+
+
+            <div class="map-label label-one">
+                المسجد النبوي
+            </div>
+
+            <div class="map-label label-two">
+                مسجد قباء
+            </div>
+
+            <div class="map-label label-three">
+                جبل أحد
+            </div>
+
         </div>
-
-        <div class="pin pin-two">
-            📍
-        </div>
-
-        <div class="pin pin-three">
-            📍
-        </div>
-
-
-        <div class="map-label label-one">
-            المسجد النبوي
-        </div>
-
-        <div class="map-label label-two">
-            مسجد قباء
-        </div>
-
-        <div class="map-label label-three">
-            جبل أحد
-        </div>
-
-    </div>
+    </a>
 
 </section>
 
