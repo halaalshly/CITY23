@@ -1,6 +1,21 @@
 <?php
 session_start();
 require_once __DIR__ . "/lang.php";
+
+/* ===== [جديد] جلب المعالم من قاعدة البيانات للخريطة ===== */
+include_once __DIR__ . "/database/db.php";
+include_once __DIR__ . "/helpers.php";
+
+$landmarks = [];
+$res = mysqli_query($conn, "SELECT ID, NAME, CATEGORY, DESCRIPTION, IMAGE_URL, MAPS_URL, latitude, longitude
+                            FROM madinah_landmarks
+                            WHERE latitude IS NOT NULL AND longitude IS NOT NULL");
+if ($res) {
+    while ($row = mysqli_fetch_assoc($res)) {
+        $row["IMAGE_URL"] = image_url(resolve_image($row["IMAGE_URL"], __DIR__));
+        $landmarks[] = $row;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -25,6 +40,19 @@ require_once __DIR__ . "/lang.php";
     <style>
         .navbar .lang-switcher { flex-wrap: nowrap; }
         .navbar .lang-switcher a { padding: 3px 8px; font-size: 11px; white-space: nowrap; }
+    </style>
+
+    <!-- [جديد] Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <style>
+        #home-map { height: 450px; border-radius: 16px; z-index: 0; }
+        .popup { width: 230px; text-align: right; direction: rtl; }
+        .popup img { width: 100%; height: 130px; object-fit: cover; border-radius: 9px; margin-bottom: 8px; }
+        .popup h3 { margin: 4px 0; color: #194d44; font-size: 16px; }
+        .popup .pcat { color: #a48343; font-size: 11px; margin-bottom: 6px; }
+        .popup p { color: #687773; font-size: 11px; line-height: 1.8; margin: 5px 0 10px; }
+        .popup a.pbtn { display: inline-block; background: #103f36; color: #fff; text-decoration: none;
+                        padding: 7px 11px; border-radius: 20px; font-size: 10px; }
     </style>
 </head>
 
@@ -422,41 +450,10 @@ require_once __DIR__ . "/lang.php";
 
     </div>
 
-    <!-- جعل الخريطة بأكملها رابطاً يوجه لصفحة map.php -->
-    <a href="map.php" style="text-decoration: none; display: block;">
-        <div class="map" style="cursor: pointer; position: relative; overflow: hidden;">
-
-            <div class="road road-one"></div>
-            <div class="road road-two"></div>
-            <div class="road road-three"></div>
-
-
-            <div class="pin pin-one">
-                📍
-            </div>
-
-            <div class="pin pin-two">
-                📍
-            </div>
-
-            <div class="pin pin-three">
-                📍
-            </div>
-
-
-            <div class="map-label label-one">
-                المسجد النبوي
-            </div>
-
-            <div class="map-label label-two">
-                مسجد قباء
-            </div>
-
-            <div class="map-label label-three">
-                جبل أحد
-            </div>
-
-        </div>
+    <!-- [جديد] الخريطة الحقيقية بدل الخريطة الوهمية -->
+    <div id="home-map"></div>
+    <a href="map.php" class="view-all" style="display:inline-block; margin-top:12px;">
+        افتح الخريطة الكاملة ←
     </a>
 
 </section>
@@ -548,6 +545,47 @@ require_once __DIR__ . "/lang.php";
 
 
 </footer>
+
+<!-- [جديد] Leaflet JS + كود الخريطة -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const landmarks = <?= json_encode($landmarks, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+
+const map = L.map('home-map', { scrollWheelZoom: false }).setView([24.4672, 39.6111], 12);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+function esc(t) {
+    return String(t ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+
+const markers = [];
+landmarks.forEach(p => {
+    const lat = parseFloat(p.latitude), lng = parseFloat(p.longitude);
+    if (isNaN(lat) || isNaN(lng)) return;
+
+    const img = p.IMAGE_URL
+        ? `<img src="${esc(p.IMAGE_URL)}" alt="${esc(p.NAME)}" onerror="this.style.display='none'">` : '';
+    const link = p.MAPS_URL
+        ? `<a class="pbtn" href="${esc(p.MAPS_URL)}" target="_blank" rel="noopener">📍 فتح Google Maps</a>` : '';
+
+    const m = L.marker([lat, lng]).addTo(map).bindPopup(`
+        <div class="popup">
+            ${img}
+            <h3>${esc(p.NAME)}</h3>
+            <div class="pcat">${esc(p.CATEGORY)}</div>
+            <p>${esc(p.DESCRIPTION)}</p>
+            ${link}
+        </div>`);
+    markers.push(m);
+});
+
+if (markers.length) map.fitBounds(L.featureGroup(markers).getBounds().pad(0.15));
+</script>
 
 <?php include __DIR__ . "/translate_widget.php"; ?>
 </body>
