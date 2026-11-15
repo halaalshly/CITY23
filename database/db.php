@@ -1,15 +1,18 @@
 <?php
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "city";
+mysqli_report(MYSQLI_REPORT_OFF);
 
-$conn = mysqli_connect($host, $user, $password, $database);
+$host     = getenv('DB_HOST');
+$user     = getenv('DB_USER');
+$password = getenv('DB_PASS');
+$database = getenv('DB_NAME');
+$port     = (int) getenv('DB_PORT');
 
-if (!$conn) {
+$conn = mysqli_init();
+mysqli_ssl_set($conn, null, null, "/etc/ssl/certs/ca-certificates.crt", null, null);
+
+if (!mysqli_real_connect($conn, $host, $user, $password, $database, $port, null, MYSQLI_CLIENT_SSL)) {
     die("فشل الاتصال بقاعدة البيانات: " . mysqli_connect_error());
 }
 
 mysqli_set_charset($conn, "utf8mb4");
-
 ?>
